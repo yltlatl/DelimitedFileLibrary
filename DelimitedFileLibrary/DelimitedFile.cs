@@ -53,6 +53,8 @@ namespace DelimitedFileLibrary
 
         private StreamReader _str { get; set; }
 
+        public string CurrentLine { get; private set; } 
+
         public IEnumerable<string> CurrentRecord { get; private set; }
 
         public IEnumerable<string> HeaderRecord { get; private set; }
@@ -88,6 +90,7 @@ namespace DelimitedFileLibrary
                 EndOfFile = true;
                 return;
             }
+            CurrentLine = line;
             if (string.IsNullOrEmpty(line)) throw new ApplicationException("Empty line.");
             CurrentRecord = ParseLine(line);
         }
@@ -101,11 +104,11 @@ namespace DelimitedFileLibrary
         {
             var record = line.Split(delimiter).ToList();
             if (record == null) throw new ApplicationException(string.Format("No fields found in {0}", line));
-            if (record.Count() != expectedFieldCount)
+            if (record.Count != expectedFieldCount)
             {
                 record = SplitLineRobustly(line, delimiter, quote);
             }
-            if (record.Count() != expectedFieldCount) throw new InvalidDataException("Problem encountered parsing line to record.");
+            if (expectedFieldCount != 0 && record.Count != expectedFieldCount) throw new InvalidDataException("Problem encountered parsing line to record.");
             var retVal = new List<string>();
             var q = quote.ToString(CultureInfo.InvariantCulture);
             var currentRecord = record as IList<string> ?? record.ToList();
@@ -147,6 +150,7 @@ namespace DelimitedFileLibrary
                 {
                     if (quoteOpen)
                     {
+                        if (i == (line.Length - 1)) continue;
                         if (line[i + 1] == fieldDelimiter)
                         {
                             quoteOpen = false;
@@ -172,6 +176,15 @@ namespace DelimitedFileLibrary
                 }
             }
             return retVal;
+        }
+
+        public static IEnumerable<string> ParseMultiValueField(string fieldValue, char multiValueDelimiter, bool omitEmptyValues, bool trimWhitespace)
+        {
+            if (string.IsNullOrEmpty(fieldValue)) return new List<string>();
+            var mvdArray = new[]{multiValueDelimiter};
+            var sso = omitEmptyValues ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None;
+            var splitResult = fieldValue.Split(mvdArray, sso);
+            return trimWhitespace ? splitResult.Select(v => v.Trim()).ToList() : splitResult.ToList();
         }
 
 
