@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -64,10 +65,16 @@ namespace DelimitedFileLibrary
         //Get a particular field from the record by its zero-indexed position
         public string GetFieldByPosition(int position)
         {
+            //TODO: fix possible meaningless reference to HeaderRecord.Count() (or possible null reference)
             if (position < 0 || position >= HeaderRecord.Count())
                 throw new ArgumentOutOfRangeException(position.ToString(CultureInfo.InvariantCulture), "Position is out of range.");
 
             return CurrentRecord.ElementAt(position);
+        }
+
+        public List<string> GetFieldsByPosition(List<int> positions)
+        {
+            return positions.Select(position => GetFieldByPosition(position)).ToList();
         }
 
         //Get a particular field from the record by its name from the header row
@@ -119,7 +126,9 @@ namespace DelimitedFileLibrary
         private static string ReplaceQuotesIntelligently(string s, string q)
         {
             if (s.StartsWith(q)) s = s.Remove(0, 1);
-            if (s.EndsWith(q)) s = s.Remove(s.Length - 1, 1);
+            //for some reason endswith is returning true for small thorn where the string ends in 'h'
+            //if (s.EndsWith(q)) s = s.Remove(s.Length - 1, 1);
+            if (Regex.IsMatch(s, string.Format("{0}$", q))) s = s.Remove(s.Length - 1, 1);
             return s;
         }
 
@@ -150,7 +159,12 @@ namespace DelimitedFileLibrary
                 {
                     if (quoteOpen)
                     {
-                        if (i == (line.Length - 1)) continue;
+                        if (i == (line.Length - 1))
+                        {
+                            retVal.Add(buffer.ToString());
+                            buffer.Clear();
+                            continue;
+                        }
                         if (line[i + 1] == fieldDelimiter)
                         {
                             quoteOpen = false;
