@@ -59,6 +59,24 @@
       <Name>DelimitedFileLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="TestData\QuoteRemoval\1200_carats.txt" />
+    <Content Include="TestData\QuoteRemoval\1200_quotes.txt" />
+    <Content Include="TestData\QuoteRemoval\1200_thorns.txt" />
+    <Content Include="TestData\QuoteRemoval\1252_carats.txt" />
+    <Content Include="TestData\QuoteRemoval\1252_quotes.txt" />
+    <Content Include="TestData\QuoteRemoval\1252_thorns.txt" />
+    <Content Include="TestData\QuoteRemoval\US-ASCII_carats.txt" />
+    <Content Include="TestData\QuoteRemoval\US-ASCII_quotes.txt" />
+    <Content Include="TestData\QuoteRemoval\US-ASCII_thorns.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8+_carats.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8+_quotes.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8+_thorns.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8_carats.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8_quotes.txt" />
+    <Content Include="TestData\QuoteRemoval\UTF8_thorns.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

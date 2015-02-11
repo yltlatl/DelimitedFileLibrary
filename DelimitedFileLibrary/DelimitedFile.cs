@@ -28,7 +28,7 @@ namespace DelimitedFileLibrary
             RecordDelimiter = recordDelimiter;
             FieldDelimiter = fieldDelimiter;
             MultiValueDelimiter = multiValueDelimiter;
-            this.Quote = quote;
+            Quote = quote;
 
             GetNextRecord();
             if (headerRecord) HeaderRecord = CurrentRecord;
@@ -92,7 +92,7 @@ namespace DelimitedFileLibrary
         public void GetNextRecord()
         {
             var line = _str.ReadLine();
-            if (_str.EndOfStream)
+            if (line == null && _str.EndOfStream)
             {
                 EndOfFile = true;
                 return;
@@ -126,9 +126,7 @@ namespace DelimitedFileLibrary
         private static string ReplaceQuotesIntelligently(string s, string q)
         {
             if (s.StartsWith(q)) s = s.Remove(0, 1);
-            //for some reason endswith is returning true for small thorn where the string ends in 'h'
-            //if (s.EndsWith(q)) s = s.Remove(s.Length - 1, 1);
-            if (Regex.IsMatch(s, string.Format("{0}$", q))) s = s.Remove(s.Length - 1, 1);
+            if (s.EndsWith(q)) s = s.Remove(s.Length - 1, 1);
             return s;
         }
 
