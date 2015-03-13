@@ -30,6 +30,8 @@ namespace DelimitedFileLibrary
             MultiValueDelimiter = multiValueDelimiter;
             Quote = quote;
 
+            CurrentLineNumber = 0;
+
             GetNextRecord();
             if (headerRecord) HeaderRecord = CurrentRecord;
             ExpectedFieldCount = CurrentRecord.Count();
@@ -59,6 +61,8 @@ namespace DelimitedFileLibrary
         public IEnumerable<string> CurrentRecord { get; private set; }
 
         public IEnumerable<string> HeaderRecord { get; private set; }
+
+        public int CurrentLineNumber { get; private set; }
 
         #endregion
 
@@ -100,6 +104,7 @@ namespace DelimitedFileLibrary
             CurrentLine = line;
             if (string.IsNullOrEmpty(line)) throw new ApplicationException("Empty line.");
             CurrentRecord = ParseLine(line);
+            CurrentLineNumber++;
         }
 
         public IEnumerable<string> ParseLine(string line)

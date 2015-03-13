@@ -160,12 +160,141 @@ namespace DelimitedFileLibrary.DelimitedFileUnitTests
         {
             var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
             cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1200_carats.txt");
-            var df = new DelimitedFile(cwdStrB.ToString(), "utf16", '\n', '\u0014', ';', '^');
+            var df = new DelimitedFile(cwdStrB.ToString(), "utf-16", '\n', '\u0014', ';', '^');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_1200Quotes_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1200_quotes.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "utf-16", '\n', '\u0014', ';', '"');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_1200Thorns_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1200_thorns.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "utf-16");
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_1252Carats_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1252_carats.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "windows-1252", '\n', '\u0014', ';', '^');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_1252Quotes_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1252_quotes.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "windows-1252", '\n', '\u0014', ';', '"');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_1252Thorns_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\1252_thorns.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "windows-1252");
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_UsAsciiCarats_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\US-ASCII_carats.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "us-ascii", '\n', '\u0014', ';', '^');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_UsAsciiQuotes_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\US-ASCII_quotes.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "us-ascii", '\n', '\u0014', ';', '"');
+            var success = CheckForBadQuoteReplacement(df);
+            Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
+        }
+
+        [TestMethod]
+        [TestCategory("Quote Removal")]
+        public void ReplaceQuotes_UsAsciiThorns_QuotesAccuratelyReplaced()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\US-ASCII_thorns.txt");
+            var df = new DelimitedFile(cwdStrB.ToString(), "us-ascii");
             var success = CheckForBadQuoteReplacement(df);
             Assert.IsTrue(success, "At least one row failed to properly replace quotes: {0}", df.GetFieldByPosition(0));
         }
         #endregion
 
+        #region Encoding
+
+        [TestMethod]
+        [TestCategory("Encoding")]
+        public void EncodingValidation_CommonEncodings_EncodingValidationSucceeds()
+        {
+            var cwdStrB = new StringBuilder(Directory.GetCurrentDirectory());
+            //Encoding of the underlying file is irrelevant for this test
+            cwdStrB.Replace(@"bin\Debug", @"TestData\QuoteRemoval\UTF8+_quotes.txt");
+            var commonEncodings = new[]
+            {
+                "utf-16",
+                "utf-16BE",
+                "Windows-1252",
+                "us-ascii",
+                "utf-7",
+                "utf-8"
+            };
+            var success = true;
+            foreach (var e in commonEncodings)
+            {
+                try
+                {
+                    var df = new DelimitedFile(cwdStrB.ToString(), e);
+                }
+                catch (ArgumentException exception)
+                {
+                    if (exception.ParamName.Equals("encoding"))
+                    {
+                        success = false;
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown exception encountered.", exception);
+                    }
+                }
+            }
+            Assert.IsTrue(success, "At least one encoding failed to validate.");
+        }
+
+        #endregion
         #region HelperMethods
 
         private bool CheckForBadQuoteReplacement(DelimitedFile df)
