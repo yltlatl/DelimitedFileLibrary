@@ -105,7 +105,7 @@ namespace DelimitedFileLibrary
             {
                 record = SplitLineRobustly(line, delimiter, quote);
             }
-            if (record.Count() != expectedFieldCount) throw new InvalidDataException("Problem encountered parsing line to record.");
+            //if (record.Count() != expectedFieldCount) throw new InvalidDataException("Problem encountered parsing line to record.");
             var retVal = new List<string>();
             var q = quote.ToString(CultureInfo.InvariantCulture);
             var currentRecord = record as IList<string> ?? record.ToList();
