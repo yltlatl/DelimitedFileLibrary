@@ -1,0 +1,5 @@
+C:\Users\agardner\Documents\Visual Studio 2013\Projects\DelimitedFileLibrary\DelimitedFileLibrary\bin\Debug\DelimitedFileLibrary.dll
+C:\Users\agardner\Documents\Visual Studio 2013\Projects\DelimitedFileLibrary\DelimitedFileLibrary\bin\Debug\DelimitedFileLibrary.pdb
+C:\Users\agardner\Documents\Visual Studio 2013\Projects\DelimitedFileLibrary\DelimitedFileLibrary\obj\Debug\DelimitedFileLibrary.csprojResolveAssemblyReference.cache
+C:\Users\agardner\Documents\Visual Studio 2013\Projects\DelimitedFileLibrary\DelimitedFileLibrary\obj\Debug\DelimitedFileLibrary.dll
+C:\Users\agardner\Documents\Visual Studio 2013\Projects\DelimitedFileLibrary\DelimitedFileLibrary\obj\Debug\DelimitedFileLibrary.pdb
